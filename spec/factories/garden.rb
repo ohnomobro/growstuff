@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :garden do
     name 'Springfield Community Garden'
     description "This is a **totally** cool garden"
@@ -20,6 +20,5 @@ FactoryGirl.define do
     factory :garden_z do
       name 'Zzzz this garden makes me sleepy'
     end
-
   end
 end

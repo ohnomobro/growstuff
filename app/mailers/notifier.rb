@@ -3,17 +3,21 @@ class Notifier < ActionMailer::Base
   default from: "Growstuff <noreply@growstuff.org>"
 
   def verifier
-    raise "RAILS_SECRET_TOKEN environment variable not set - have you created config/application.yml?" unless ENV['RAILS_SECRET_TOKEN']
+    unless ENV['RAILS_SECRET_TOKEN']
+      raise "RAILS_SECRET_TOKEN environment variable"\
+        "not set - have you created config/application.yml?"
+    end
 
-    return ActiveSupport::MessageVerifier.new(ENV['RAILS_SECRET_TOKEN'])
+    ActiveSupport::MessageVerifier.new(ENV['RAILS_SECRET_TOKEN'])
   end
 
   def notify(notification)
     @notification = notification
     @reply_link = reply_link(@notification)
 
-    # Encrypting 
-    @signed_message = verifier.generate ({ member_id: @notification.recipient.id, type: :send_notification_email })
+    # Encrypting
+    message = { member_id: @notification.recipient.id, type: :send_notification_email }
+    @signed_message = verifier.generate(message)
 
     mail(to: @notification.recipient.email,
          subject: @notification.subject)
@@ -25,28 +29,28 @@ class Notifier < ActionMailer::Base
     @plantings = @member.plantings.first(5)
     @harvests = @member.harvests.first(5)
 
-    # Encrypting 
-    @signed_message = verifier.generate ({ member_id: @member.id, type: :send_planting_reminder })
+    # Encrypting
+    message = { member_id: @member.id, type: :send_planting_reminder }
+    @signed_message = verifier.generate(message)
 
-    if @member.send_planting_reminder
-      mail(to: @member.email,
-          subject: "What have you planted lately?")
-    end
+    mail(to: @member.email, subject: "What have you planted lately?") if @member.send_planting_reminder
   end
 
   def new_crop_request(member, request)
-    @member, @request = member, request
-    mail(to: @member.email, subject: "#{@request.requester.login_name} has requested #{@request.name} as a new crop")    
+    @member = member
+    @request = request
+    mail(to: @member.email, subject: "#{@request.requester.login_name} has requested #{@request.name} as a new crop")
   end
 
   def crop_request_approved(member, crop)
-    @member, @crop = member, crop
+    @member = member
+    @crop = crop
     mail(to: @member.email, subject: "#{crop.name.capitalize} has been approved")
   end
 
   def crop_request_rejected(member, crop)
-    @member, @crop = member, crop
+    @member = member
+    @crop = crop
     mail(to: @member.email, subject: "#{crop.name.capitalize} has been rejected")
   end
-
 end

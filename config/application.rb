@@ -44,9 +44,6 @@ module Growstuff
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
-    # Configure a default account type
-    config.default_account_type = "Free"
-
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
@@ -82,7 +79,6 @@ module Growstuff
       g.javascripts      false
     end
 
-
     # Growstuff-specific configuration variables
     config.currency = 'AUD'
     config.bot_email = "noreply@growstuff.org"
@@ -90,7 +86,7 @@ module Growstuff
     config.user_agent_email = "info@growstuff.org"
 
     Gibbon::API.api_key = ENV['GROWSTUFF_MAILCHIMP_APIKEY'] || 'notarealkey'
-      # API key can't be blank or tests fail
+    # API key can't be blank or tests fail
     Gibbon::API.timeout = 10
     Gibbon::API.throws_exceptions = false
     config.newsletter_list_id = ENV['GROWSTUFF_MAILCHIMP_NEWSLETTER_ID']

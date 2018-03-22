@@ -1,13 +1,13 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:email) { |n| "member#{n}@example.com" }
   sequence(:login_name) { |n| "member#{n}" }
 
-  factory :member, aliases: [:author, :owner, :sender, :recipient, :creator] do
+  factory :member, aliases: %i(author owner sender recipient creator) do
     login_name { generate(:login_name) }
     password 'password1'
     email { generate(:email) }
     tos_agreement true
-    confirmed_at Time.now
+    confirmed_at { Time.now }
     show_email false
     bio 'I love seeds'
 
@@ -49,23 +49,23 @@ FactoryGirl.define do
     factory :edinburgh_member do
       location 'Edinburgh'
       latitude 55.953252
-      longitude -3.188267
+      longitude { -3.188267 }
     end
 
     factory :south_pole_member do
       sequence(:login_name) { |n| "ScottRF#{n}" }
       location 'Amundsen-Scott Base, Antarctica'
-      latitude -90
+      latitude { -90 }
       longitude 0
     end
 
     factory :admin_member do
-      roles { [ FactoryGirl.create(:admin) ] }
+      roles { [FactoryBot.create(:admin)] }
     end
 
     factory :crop_wrangling_member do
-      roles { [ FactoryGirl.create(:crop_wrangler) ] }
-      sequence(:login_name) {|n| "wrangler#{n}"}
+      roles { [FactoryBot.create(:crop_wrangler)] }
+      sequence(:login_name) { |n| "wrangler#{n}" }
     end
 
     factory :invalid_member_shortname do
@@ -103,7 +103,5 @@ FactoryGirl.define do
     factory :no_email_notifications_member do
       send_notification_email false
     end
-
   end
-
 end

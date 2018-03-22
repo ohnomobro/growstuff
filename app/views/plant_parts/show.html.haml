@@ -1,6 +1,6 @@
 - content_for :title, @plant_part.name.titlecase
 - content_for :opengraph do
-  = tag("meta", property: "og:title", content: @plant_part.name.titlecase)  
+  = tag("meta", property: "og:title", content: @plant_part.name.titlecase)
   = tag("meta", property: "og:type", content: "website")
   = tag("meta", property: "og:url", content: request.original_url)
   = tag("meta", property: "og:site_name", content: ENV['GROWSTUFF_SITE_NAME'])
@@ -17,6 +17,6 @@
 
 %p
 - if can? :edit, @plant_part
-  = link_to 'Edit', edit_plant_part_path(@plant_part), :class => 'btn btn-default btn-xs'
+  = link_to 'Edit', edit_plant_part_path(@plant_part), class: 'btn btn-default btn-xs'
 - if can? :destroy, @plant_part
-  = link_to 'Delete', @plant_part, :method => :delete, :data => { :confirm => 'Are you sure?' }, :class => 'btn btn-default btn-xs'
+  = link_to 'Delete', @plant_part, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-xs'

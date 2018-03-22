@@ -3,18 +3,17 @@ class ApplicationController < ActionController::Base
 
   include ApplicationHelper
 
-  after_filter :store_location
-  before_filter :set_locale
+  after_action :store_location
+  before_action :set_locale
 
   def store_location
-    if (request.path != "/members/sign_in" &&
-        request.path != "/members/sign_up" &&
-        request.path != "/members/password/new" &&
-        request.path != "/members/password/edit" &&
-        request.path != "/members/confirmation" &&
-        request.path != "/members/sign_out" &&
-        !request.xhr?)
-        store_location_for(:member, request.fullpath)
+    unless request.path.in?(["/members/sign_in",
+                             "/members/sign_up",
+                             "/members/password/new",
+                             "/members/password/edit",
+                             "/members/confirmation",
+                             "/members/sign_out"]) || request.xhr?
+      store_location_for(:member, request.fullpath)
     end
   end
 
@@ -23,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    request.referrer
+    request.referer
   end
 
   # tweak CanCan defaults because we don't have a "current_user" method
@@ -60,8 +59,7 @@ class ApplicationController < ActionController::Base
         # profile stuff
         :bio, :location, :latitude, :longitude,
         # email settings
-        :show_email, :newsletter, :send_notification_email, :send_planting_reminder
-      )
+        :show_email, :newsletter, :send_notification_email, :send_planting_reminder)
     end
 
     devise_parameter_sanitizer.permit(:account_update) do |member|
@@ -73,10 +71,12 @@ class ApplicationController < ActionController::Base
         :bio, :location, :latitude, :longitude,
         # email settings
         :show_email, :newsletter, :send_notification_email, :send_planting_reminder,
-        #update password
-        :current_password
-      )
+        # update password
+        :current_password)
     end
   end
 
+  def expire_homepage
+    expire_fragment("homepage_stats")
+  end
 end

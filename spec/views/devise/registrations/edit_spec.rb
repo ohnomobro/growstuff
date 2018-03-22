@@ -1,27 +1,10 @@
-## DEPRECATION NOTICE: Do not add new tests to this file!
-##
-## View and controller tests are deprecated in the Growstuff project. 
-## We no longer write new view and controller tests, but instead write 
-## feature tests (in spec/features) using Capybara (https://github.com/jnicklas/capybara). 
-## These test the full stack, behaving as a browser, and require less complicated setup 
-## to run. Please feel free to delete old view/controller tests as they are reimplemented 
-## in feature tests. 
-##
-## If you submit a pull request containing new view or controller tests, it will not be 
-## merged.
-
-
-
-
-
 require 'rails_helper'
 
 describe 'devise/registrations/edit.html.haml', type: "view" do
-
   context "logged in" do
     before(:each) do
       controller.stub(:current_user) { nil }
-      @member = FactoryGirl.create(:member)
+      @member = FactoryBot.create(:member)
       controller.stub(:current_member) { @member }
       @view.stub(:resource).and_return(@member)
       @view.stub(:resource_name).and_return("member")
@@ -75,7 +58,6 @@ describe 'devise/registrations/edit.html.haml', type: "view" do
     end
 
     context 'other sites section' do
-
       context 'not connected to twitter' do
         it 'has a link to connect' do
           render
@@ -84,7 +66,7 @@ describe 'devise/registrations/edit.html.haml', type: "view" do
       end
       context 'connected to twitter' do
         before(:each) do
-          @twitter_auth = FactoryGirl.create(:authentication, member: @member)
+          @twitter_auth = FactoryBot.create(:authentication, member: @member)
           render
         end
         it 'has a link to twitter profile' do
@@ -104,7 +86,7 @@ describe 'devise/registrations/edit.html.haml', type: "view" do
       end
       context 'connected to flickr' do
         before(:each) do
-          @flickr_auth = FactoryGirl.create(:flickr_authentication, member: @member)
+          @flickr_auth = FactoryBot.create(:flickr_authentication, member: @member)
           render
         end
         it 'has a link to flickr photostream' do
@@ -115,9 +97,6 @@ describe 'devise/registrations/edit.html.haml', type: "view" do
           assert_select "a", href: @flickr_auth, text: "Disconnect"
         end
       end
-
     end
-
   end
-
 end

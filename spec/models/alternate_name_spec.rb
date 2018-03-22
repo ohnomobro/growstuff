@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe AlternateName do
-  let(:an) { FactoryGirl.create(:alternate_eggplant) }
+  let(:an) { FactoryBot.create(:alternate_eggplant) }
 
   it 'should save a basic alternate name' do
     expect(an.save).to be(true)
@@ -18,5 +18,4 @@ describe AlternateName do
     expect(crop.alternate_names).to include an
     expect(crop.alternate_names).to include an2
   end
-
 end
