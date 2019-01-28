@@ -4,7 +4,7 @@ feature "forums", js: true do
   context "as an admin user" do
     let(:member) { create :admin_member }
     let(:forum) { create :forum }
-    
+
     background do
       login_as member
     end
@@ -13,7 +13,7 @@ feature "forums", js: true do
       visit root_path
       click_link "Admin"
       expect(current_path).to eq admin_path
-      within 'ul#admin_links' do
+      within 'ul#site_admin' do
         click_link "Forums"
       end
       expect(current_path).to eq forums_path
@@ -25,7 +25,7 @@ feature "forums", js: true do
       click_link member.login_name
       click_link "Admin"
       expect(current_path).to eq admin_path
-      within 'ul#admin_links' do
+      within 'ul#site_admin' do
         click_link "Forums"
       end
       expect(current_path).to eq forums_path

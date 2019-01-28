@@ -1,27 +1,35 @@
 require 'rails_helper'
 
-
 feature "signin", js: true do
-  let(:member) { create :member }
-  let(:recipient) { create :member }
-  let(:wrangler) { create :crop_wrangling_member }
-  let(:notification) { create :notification }
+  let(:member) { FactoryBot.create :member }
+  let(:recipient) { FactoryBot.create :member }
+  let(:wrangler) { FactoryBot.create :crop_wrangling_member }
+  let(:notification) { FactoryBot.create :notification, recipient: recipient }
+
+  def login
+    fill_in 'Login', with: member.login_name
+    fill_in 'Password', with: member.password
+    click_button 'Sign in'
+  end
+
+  scenario "via email address" do
+    visit crops_path # some random page
+    click_link 'Sign in'
+    login
+    expect(page).to have_content("Sign out")
+  end
 
   scenario "redirect to previous page after signin" do
     visit crops_path # some random page
     click_link 'Sign in'
-    fill_in 'Login', with: member.login_name
-    fill_in 'Password', with: member.password
-    click_button 'Sign in'
+    login
     expect(current_path).to eq crops_path
   end
 
   scenario "don't redirect to devise pages after signin" do
     visit new_member_registration_path # devise signup page
     click_link 'Sign in'
-    fill_in 'Login', with: member.login_name
-    fill_in 'Password', with: member.password
-    click_button 'Sign in'
+    login
     expect(current_path).to eq root_path
   end
 
@@ -30,25 +38,27 @@ feature "signin", js: true do
     expect(current_path).to eq new_member_session_path
   end
 
-  scenario "after signin, redirect to what you were trying to do" do
-    models = %w[plantings harvests posts photos gardens seeds]
-    models.each do |model|
-      visit "/#{model}/new"
+  shared_examples "redirects to what you were trying to do" do
+    scenario do
+      visit "/#{model_name}/new"
       expect(current_path).to eq new_member_session_path
-      fill_in 'Login', with: member.login_name
-      fill_in 'Password', with: member.password
-      click_button 'Sign in'
-      expect(current_path).to eq "/#{model}/new"
-      click_link 'Sign out'
+      login
+      expect(current_path).to eq "/#{model_name}/new"
+    end
+  end
+
+  describe "redirects to what you were trying to do" do
+    %w(plantings harvests posts gardens seeds).each do |m|
+      it_behaves_like "redirects to what you were trying to do" do
+        let(:model_name) { m }
+      end
     end
   end
 
   scenario "after signin, redirect to new notifications page" do
-    visit new_notification_path(recipient: recipient)
+    visit new_notification_path(recipient_id: recipient.id)
     expect(current_path).to eq new_member_session_path
-    fill_in 'Login', with: member.login_name
-    fill_in 'Password', with: member.password
-    click_button 'Sign in'
+    login
     expect(current_path).to eq new_notification_path
   end
 
@@ -63,20 +73,20 @@ feature "signin", js: true do
   end
 
   context "with facebook" do
-     scenario "sign in" do
+    scenario "sign in" do
       # Ordinarily done by database_cleaner
       Member.where(login_name: 'tdawg').delete_all
 
-      member = create :member, login_name: 'tdawg', email: 'example.oauth.facebook@example.com'
+      create :member, login_name: 'tdawg', email: 'example.oauth.facebook@example.com'
 
       # Start the test
-      visit root_path 
+      visit root_path
       first('.signup a').click
 
       # Click the signup with facebook link
 
       first('a[href="/members/auth/facebook"]').click
-      # Magic happens! 
+      # Magic happens!
       # See config/environments/test.rb for the fake user
       # that we pretended to auth as
 

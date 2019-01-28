@@ -1,48 +1,40 @@
 module HarvestsHelper
-
   def display_quantity(harvest)
     human_quantity = display_human_quantity(harvest)
     weight = display_weight(harvest)
 
-    if human_quantity && weight
-      return "#{human_quantity}, weighing #{weight}"
-    elsif human_quantity
-      return human_quantity
-    elsif weight
-      return weight
-    else
-      return 'not specified'
-    end
+    return "#{human_quantity}, weighing #{weight}" if human_quantity && weight
+    return human_quantity if human_quantity
+    return weight if weight
+
+    'not specified'
   end
 
   def display_human_quantity(harvest)
-    if ! harvest.quantity.blank? && harvest.quantity > 0
-      if harvest.unit == 'individual' # just the number
-        number_to_human(harvest.quantity, strip_insignificant_zeros: true)
-      elsif ! harvest.unit.blank? # pluralize anything else
-        return pluralize(number_to_human(harvest.quantity, strip_insignificant_zeros: true), harvest.unit)
-      else
-        return "#{number_to_human(harvest.quantity, strip_insignificant_zeros: true)} #{harvest.unit}"
-      end
+    return unless harvest.quantity.present? && harvest.quantity > 0
+
+    if harvest.unit == 'individual' # just the number
+      number_to_human(harvest.quantity, strip_insignificant_zeros: true)
+    elsif harvest.unit.present? # pluralize anything else
+      pluralize(number_to_human(harvest.quantity, strip_insignificant_zeros: true), harvest.unit)
     else
-      return nil
+      "#{number_to_human(harvest.quantity, strip_insignificant_zeros: true)} #{harvest.unit}"
     end
   end
 
   def display_weight(harvest)
-    if ! harvest.weight_quantity.blank? && harvest.weight_quantity > 0
-      return "#{number_to_human(harvest.weight_quantity, strip_insignificant_zeros: true)} #{harvest.weight_unit}"
-    else
-      return nil
-    end
+    return if harvest.weight_quantity.blank? || harvest.weight_quantity <= 0
+
+    "#{number_to_human(harvest.weight_quantity, strip_insignificant_zeros: true)} #{harvest.weight_unit}"
   end
 
   def display_harvest_description(harvest)
-    if harvest.description.empty?
-      "No description provided."
+    if harvest.description.nil?
+      "no description provided."
     else
-      harvest.description
+      truncate(harvest.description, length: 50, separator: ' ', omission: '... ') do
+        link_to "Read more", harvest_path(harvest)
+      end
     end
   end
-
 end

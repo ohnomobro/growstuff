@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 ComfortableMexicanSofa.configure do |config|
   # Title of the admin area
   #   config.cms_title = 'ComfortableMexicanSofa CMS Engine'
@@ -9,7 +7,7 @@ ComfortableMexicanSofa.configure do |config|
 
   # Module responsible for authentication. You can replace it with your own.
   # It simply needs to have #authenticate method. See http_auth.rb for reference.
-     config.admin_auth = 'CmsDeviseAuth'
+  config.admin_auth = 'CmsDeviseAuth'
 
   # Module responsible for authorization on admin side. It should have #authorize
   # method that returns true or false based on params and loaded instance
@@ -57,9 +55,11 @@ ComfortableMexicanSofa.configure do |config|
   # object you want to keep. Set it to 0 if you wish to turn this feature off.
   #   config.revisions_limit = 25
 
+  # rubocop:disable Style/AsciiComments
   # Locale definitions. If you want to define your own locale merge
   # {:locale => 'Locale Title'} with this.
   #   config.locales = {:en => 'English', :es => 'Español'}
+  # rubocop:enable Style/AsciiComments
 
   # Admin interface will respect the locale of the site being managed. However you can
   # force it to English by setting this to `:en`
@@ -91,13 +91,12 @@ ComfortableMexicanSofa.configure do |config|
   # Reveal partials that can be overwritten in the admin area.
   # Default is false.
   #   config.reveal_cms_partials = false
-
 end
 
 module CmsDeviseAuth
   def authenticate
-    unless current_member && current_member.has_role?(:admin)
-      redirect_to root_path, alert: 'Permission denied. Please sign in as an admin user to use the CMS admin area.'
-    end
+    return if current_member&.role?(:admin)
+
+    redirect_to root_path, alert: 'Permission denied. Please sign in as an admin user to use the CMS admin area.'
   end
 end

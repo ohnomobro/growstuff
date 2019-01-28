@@ -1,7 +1,7 @@
 - content_for :title, "Listing scientific names"
 
 - if can? :create, ScientificName
-  %p= link_to 'New Scientific name', new_scientific_name_path, :class => 'btn btn-primary'
+  %p= link_to 'New Scientific name', new_scientific_name_path, class: 'btn btn-primary'
 
 %table
   %tr
@@ -12,12 +12,13 @@
 
   - @scientific_names.each do |scientific_name|
     %tr
-      %td= link_to scientific_name.scientific_name, scientific_name
+      %td= link_to scientific_name.name, scientific_name
       %td= scientific_name.crop_id
       %td= link_to 'Show', scientific_name
       %td
         - if can? :edit, scientific_name
-          = link_to 'Edit', edit_scientific_name_path(scientific_name), :class => 'btn btn-default btn-xs'
+          = link_to 'Edit', edit_scientific_name_path(scientific_name), class: 'btn btn-default btn-xs'
       %td
         - if can? :destroy, scientific_name
-          = link_to 'Delete', scientific_name, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-default btn-xs'
+          = link_to 'Delete', scientific_name, method: :delete, data: { confirm: 'Are you sure?' },
+            class: 'btn btn-default btn-xs'

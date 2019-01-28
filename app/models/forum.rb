@@ -1,12 +1,12 @@
-class Forum < ActiveRecord::Base
+class Forum < ApplicationRecord
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
+  include Ownable
+  validates :name, presence: true
+  friendly_id :name, use: %i(slugged finders)
 
-  has_many :posts
-  belongs_to :owner, class_name: "Member"
+  has_many :posts, dependent: :destroy
 
   def to_s
-    return name
+    name
   end
-
 end

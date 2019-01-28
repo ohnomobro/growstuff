@@ -31,13 +31,6 @@ RAILS_SECRET_TOKEN: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 # name that appears on the site, eg. in page titles
 GROWSTUFF_SITE_NAME: Growstuff (dev)
 
-# Mandrill is used to send transactional email (eg. signup
-# confirmations).  If using Heroku connect to Mandrill via Heroku addons
-# list then go to tools menu (upper right) and choose "SMTP and API
-# Credentials"
-GROWSTUFF_MANDRILL_USERNAME: "dummy"
-GROWSTUFF_MANDRILL_APIKEY: "dummy"
-
 # Mailchimp is used for subscribing/unsubscribing people from the newsletter
 # To fetch list IDs using Gibbon (and thus find the ID of your newsletter):
 #   $ rails c
@@ -57,11 +50,6 @@ GROWSTUFF_TWITTER_SECRET: ""
 GROWSTUFF_FLICKR_KEY: ""
 GROWSTUFF_FLICKR_SECRET: ""
 
-# Paypal is used for payments, obviously.
-GROWSTUFF_PAYPAL_USERNAME: "dummy"
-GROWSTUFF_PAYPAL_PASSWORD: "dummy"
-GROWSTUFF_PAYPAL_SIGNATURE: "dummy"
-
 # https://developers.facebook.com/
 GROWSTUFF_FACEBOOK_KEY: ""
 GROWSTUFF_FACEBOOK_SECRET: ""
@@ -79,6 +67,9 @@ GROWSTUFF_ELASTICSEARCH: "false"
 # To push these settings to Heroku, use "rake figaro:heroku --app=whatever".
 # To see current settings on Heroku, use "heroku config --app=whatever".
 ##############################################################################
+
+### EMAil addres for notifier and mailers to use as from
+GROWSTUFF_EMAIL: 'noreply@dev.growstuff.org'
 
 test:
   GROWSTUFF_SITE_NAME: Growstuff (test)

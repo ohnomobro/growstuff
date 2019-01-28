@@ -1,16 +1,16 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :notification, aliases: [:message] do
-    sender
-    recipient
-    subject "MyString"
-    body "MyText"
-    read false
+    sender { FactoryBot.create :member }
+    recipient { FactoryBot.create :member }
+    subject { "MyString" }
+    body { "MyText" }
+    read { false }
     post
 
     factory :no_email_notification do
-      recipient { FactoryGirl.create(:no_email_notifications_member) }
+      recipient { FactoryBot.create(:no_email_notifications_member) }
     end
   end
 end

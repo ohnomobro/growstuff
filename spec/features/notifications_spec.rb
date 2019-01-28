@@ -2,16 +2,16 @@ require 'rails_helper'
 
 feature "Notifications", :js do
   let(:sender) { create :member }
-  let(:recipient) { create :member }
+  let(:recipient) { create :member, login_name: 'beyonce' }
 
   context "On existing notification" do
-    let!(:notification) {
+    let!(:notification) do
       create :notification,
-             sender: sender,
-             recipient: recipient,
-             body: "Notification body",
-             post_id: nil
-    }
+        sender:    sender,
+        recipient: recipient,
+        body:      "Notification body",
+        post_id:   nil
+    end
 
     background do
       login_as recipient
@@ -31,7 +31,7 @@ feature "Notifications", :js do
 
   describe 'pagination' do
     before do
-      34.times { FactoryGirl.create :notification, recipient: recipient }
+      FactoryBot.create_list :notification, 34, recipient: recipient
       login_as recipient
       visit notifications_path
     end

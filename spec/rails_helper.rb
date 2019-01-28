@@ -5,9 +5,9 @@ require 'coveralls'
 
 # output coverage locally AND send it to coveralls
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-])
+                                                                 SimpleCov::Formatter::HTMLFormatter,
+                                                                 Coveralls::SimpleCov::Formatter
+                                                               ])
 
 # fail if there's a significant test coverage drop
 SimpleCov.maximum_coverage_drop 1
@@ -17,7 +17,7 @@ SimpleCov.start :rails do
 end
 
 require 'spec_helper'
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../config/environment', __dir__)
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 Rails.application.eager_load!
@@ -37,7 +37,7 @@ if ENV['GROWSTUFF_CAPYBARA_DRIVER'].present?
 end
 
 Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
-  "screenshot_#{example.description.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
+  "screenshot_#{example.description.tr(' ', '-').gsub(%r{^.*/spec/}, '')}"
 end
 
 Capybara.app_host = 'http://localhost'
@@ -59,7 +59,7 @@ include Warden::Test::Helpers
 # require only the support files necessary.
 #
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/features/shared_examples/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/features/shared_examples/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -99,17 +99,19 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
 
-  # Allow just create(:factory) instead of needing to specify FactoryGirl.create(:factory)
-  config.include FactoryGirl::Syntax::Methods
+  # Allow just create(:factory) instead of needing to specify FactoryBot.create(:factory)
+  config.include FactoryBot::Syntax::Methods
 
   # Prevent Poltergeist from fetching external URLs during feature tests
   config.before(:each, js: true) do
-    page.driver.browser.url_blacklist = [
-      'gravatar.com',
-      'mapbox.com',
-      'okfn.org',
-      'googlecode.com',
-    ] if page.driver.browser.respond_to?(:url_blacklist)
+    if page.driver.browser.respond_to?(:url_blacklist)
+      page.driver.browser.url_blacklist = [
+        'gravatar.com',
+        'mapbox.com',
+        'okfn.org',
+        'googlecode.com'
+      ]
+    end
 
     page.driver.browser.manage.window.maximize if page.driver.browser.respond_to?(:manage)
   end

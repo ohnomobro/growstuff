@@ -1,7 +1,7 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :plant_part do
-    name "pollen"
+    name { "#{Faker::Book.title}_#{rand(100..999)}" }
   end
 end

@@ -1,28 +1,26 @@
 require 'spec_helper'
 
 describe Follow do
-  
   before(:each) do
-    @member1 = FactoryGirl.create(:member)
-    @member2 = FactoryGirl.create(:member)
+    @member1 = FactoryBot.create(:member)
+    @member2 = FactoryBot.create(:member)
   end
 
   it "sends a notification when a follow is created" do
-    expect {
+    expect do
       Follow.create(follower_id: @member1.id, followed_id: @member2.id)
-    }.to change(Notification, :count).by(1)
+    end.to change(Notification, :count).by(1)
   end
 
   it "does not delete any members when follow is deleted" do
-    expect {
+    expect do
       follow = Follow.create(follower_id: @member1.id, followed_id: @member2.id)
       follow.destroy
-    }.not_to change(Member, :count)
+    end.not_to change(Member, :count)
   end
 
   context "when follow is created" do
-
-    before (:each) do
+    before(:each) do
       @follow = Follow.create(follower_id: @member1.id, followed_id: @member2.id)
     end
 
@@ -41,5 +39,4 @@ describe Follow do
       expect(@member2.followers).not_to include(@member1)
     end
   end
-
 end

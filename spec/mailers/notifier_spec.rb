@@ -1,17 +1,16 @@
 require "rails_helper"
 
 describe Notifier do
-
   describe "notifications" do
-    let(:notification) { FactoryGirl.create(:notification) }
+    let(:notification) { FactoryBot.create(:notification) }
     let(:mail) { Notifier.notify(notification) }
 
     it 'sets the subject correctly' do
       mail.subject.should == notification.subject
     end
 
-    it 'comes from noreply@growstuff.org' do
-      mail.from.should == ['noreply@growstuff.org']
+    it 'comes from noreply@test.growstuff.org' do
+      mail.from.should == ['noreply@test.growstuff.org']
     end
 
     it 'sends the mail to the recipient of the notification' do
@@ -20,15 +19,15 @@ describe Notifier do
   end
 
   describe "planting reminders" do
-    let(:member) { FactoryGirl.create(:member) }
+    let(:member) { FactoryBot.create(:member) }
     let(:mail) { Notifier.planting_reminder(member) }
 
     it 'sets the subject correctly' do
       mail.subject.should == "What have you planted lately?"
     end
 
-    it 'comes from noreply@growstuff.org' do
-      mail.from.should == ['noreply@growstuff.org']
+    it 'comes from noreply@test.growstuff.org' do
+      mail.from.should == ['noreply@test.growstuff.org']
     end
 
     it 'sends the mail to the recipient of the notification' do
@@ -42,21 +41,19 @@ describe Notifier do
     it 'includes the new harvest URL' do
       mail.body.encoded.should match new_harvest_path
     end
-
   end
 
-
   describe "new crop request" do
-    let(:member) { FactoryGirl.create(:crop_wrangling_member) }
-    let(:crop) { FactoryGirl.create(:crop_request) }
+    let(:member) { FactoryBot.create(:crop_wrangling_member) }
+    let(:crop) { FactoryBot.create(:crop_request) }
     let(:mail) { Notifier.new_crop_request(member, crop) }
 
     it 'sets the subject correctly' do
       mail.subject.should == "#{crop.requester.login_name} has requested Ultra berry as a new crop"
     end
 
-    it 'comes from noreply@growstuff.org' do
-      mail.from.should == ['noreply@growstuff.org']
+    it 'comes from noreply@test.growstuff.org' do
+      mail.from.should == ['noreply@test.growstuff.org']
     end
 
     it 'sends the mail to the recipient of the notification' do
@@ -69,16 +66,16 @@ describe Notifier do
   end
 
   describe "crop approved" do
-    let(:member) { FactoryGirl.create(:member) }
-    let(:crop) { FactoryGirl.create(:crop) }
+    let(:member) { FactoryBot.create(:member) }
+    let(:crop) { FactoryBot.create(:crop) }
     let(:mail) { Notifier.crop_request_approved(member, crop) }
 
     it 'sets the subject correctly' do
       expect(mail.subject).to eq "Magic bean has been approved"
     end
 
-    it 'comes from noreply@growstuff.org' do
-      expect(mail.from).to eq ['noreply@growstuff.org']
+    it 'comes from noreply@test.growstuff.org' do
+      expect(mail.from).to eq ['noreply@test.growstuff.org']
     end
 
     it 'sends the mail to the recipient of the notification' do
@@ -94,20 +91,19 @@ describe Notifier do
       expect(mail.body.encoded).to match "#{new_harvest_url}\\?crop_id=#{crop.id}"
       expect(mail.body.encoded).to match "#{new_seed_url}\\?crop_id=#{crop.id}"
     end
-
   end
 
   describe "crop rejected" do
-    let(:member) { FactoryGirl.create(:member) }
-    let(:crop) { FactoryGirl.create(:rejected_crop) }
+    let(:member) { FactoryBot.create(:member) }
+    let(:crop) { FactoryBot.create(:rejected_crop) }
     let(:mail) { Notifier.crop_request_rejected(member, crop) }
 
     it 'sets the subject correctly' do
       expect(mail.subject).to eq "Fail bean has been rejected"
     end
 
-    it 'comes from noreply@growstuff.org' do
-      expect(mail.from).to eq ['noreply@growstuff.org']
+    it 'comes from noreply@test.growstuff.org' do
+      expect(mail.from).to eq ['noreply@test.growstuff.org']
     end
 
     it 'sends the mail to the recipient of the notification' do
@@ -122,6 +118,4 @@ describe Notifier do
       expect(mail.body.encoded).to match "Totally fake"
     end
   end
-
-
 end

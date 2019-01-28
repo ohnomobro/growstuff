@@ -1,17 +1,17 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 require 'openssl'
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(assets: %w(development test)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
 
 module Growstuff
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.1
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -43,9 +43,6 @@ module Growstuff
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
-
-    # Configure a default account type
-    config.default_account_type = "Free"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
@@ -82,15 +79,14 @@ module Growstuff
       g.javascripts      false
     end
 
-
     # Growstuff-specific configuration variables
     config.currency = 'AUD'
-    config.bot_email = "noreply@growstuff.org"
+    config.bot_email = ENV['GROWSTUFF_EMAIL']
     config.user_agent = 'Growstuff'
     config.user_agent_email = "info@growstuff.org"
 
     Gibbon::API.api_key = ENV['GROWSTUFF_MAILCHIMP_APIKEY'] || 'notarealkey'
-      # API key can't be blank or tests fail
+    # API key can't be blank or tests fail
     Gibbon::API.timeout = 10
     Gibbon::API.throws_exceptions = false
     config.newsletter_list_id = ENV['GROWSTUFF_MAILCHIMP_NEWSLETTER_ID']
@@ -106,6 +102,6 @@ module Growstuff
     # didn't work for us.
     config.cloudmade_key = '29a2d9e3cb3d429490a8f338b2388b1d'
 
-    config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true
   end
 end

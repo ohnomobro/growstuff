@@ -14,8 +14,8 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+require 'simplecov'
+SimpleCov.start
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -28,7 +28,7 @@ RSpec.configure do |config|
     #   # => "be bigger than 2 and smaller than 4"
     # ...rather than:
     #   # => "be bigger than 2"
-    expectations.syntax = [:should, :expect]
+    expectations.syntax = %i(should expect)
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
@@ -39,11 +39,11 @@ RSpec.configure do |config|
     # a real object. This is generally recommended, and will default to
     # `true` in RSpec 4.
     mocks.verify_partial_doubles = false
-    mocks.syntax = [:should, :expect]
+    mocks.syntax = %i(should expect)
   end
 
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
+  # The settings below are suggested to provide a good initial experience
+  # with RSpec, but feel free to customize to your heart's content.
 
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
@@ -86,4 +86,6 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 
+  # Remember which tests failed, so you can run rspec with the `--only-failures` flag.
+  config.example_status_persistence_file_path = "tmp/examples.txt"
 end
